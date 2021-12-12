@@ -28,9 +28,30 @@ body {
   justify-content: center;
 }
 
+.actionInput__inputContainer .input-group-lg > .form-control{
+  border: 3px solid rgba(151, 151, 151, 0.271416);
+  background: #f6f6f6;
+  height: 60px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: #727272;
+}
+
+.actionInput__inputContainer .form-control:focus{
+  box-shadow: none;
+  border-color: gray;
+}
+
+.actionInput__inputContainer input::placeholder{
+  color:rgba(151, 151, 151, 0.625273);
+}
+
+.actionInput__text{
+  margin-bottom: 0.5rem;
+}
+
 .actionInput {
-  height: 50px;
-  background-color: orange;
+
 }
 
 .actionItems {
