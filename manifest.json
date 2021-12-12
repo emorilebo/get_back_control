@@ -1,6 +1,21 @@
 {
   "name": "Get Back Control",
-  "description": "Build an Extension!",
+  "description": "Getting back control over time on my PC in 2022!",
   "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "/images/icons16.png",
+      "32": "/images/icons32.png",
+      "48": "/images/icons48.png",
+      "128": "/images/icons128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/icons16.png",
+    "32": "/images/icons32.png",
+    "48": "/images/icons48.png",
+    "128": "/images/icons128.png"
+  },
   "manifest_version": 3
 }
