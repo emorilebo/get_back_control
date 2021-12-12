@@ -50,6 +50,7 @@ body {
   margin-bottom: 0.5rem;
 }
 
+
 .actionInput {
 
 }
@@ -69,3 +70,30 @@ body {
   height: 140px;
   position: relative;
 }
+
+
+
+.actionInput__suggestions{
+  margin-top: 0.5rem;
+}
+
+.actionInput__suggestions button{
+  border-width: 3px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.actionInput__suggestions .btn-outline-dark{
+  color:rgba(151, 151, 151, 0.63);
+  border-color: rgba(151, 151, 151, 0.63);
+}
+
+.actionInput__suggestions .btn-outline-dark:hover{
+  background-color: rgba(151, 151, 151, 0.63);
+  color: white;
+}
+
+.actionInput__suggestions .btn-outline-dark:focus{
+  box-shadow: none;
+}
+
