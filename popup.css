@@ -24,7 +24,6 @@ body {
 }
 
 .progressContainer {
-  height: 50px;
   background-color: yellow;
 }
 
@@ -41,4 +40,11 @@ body {
 .actionItem__item {
   height: 40px;
   background-color: grey;
+}
+
+#container {
+  margin: 20px;
+  width: 200px;
+  height: 200px;
+  position: relative;
 }
