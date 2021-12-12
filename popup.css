@@ -28,7 +28,7 @@ body {
   justify-content: center;
 }
 
-.actionInput__inputContainer .input-group-lg > .form-control{
+.actionInput__inputContainer .input-group-lg > .form-control {
   border: 3px solid rgba(151, 151, 151, 0.271416);
   background: #f6f6f6;
   height: 60px;
@@ -37,29 +37,24 @@ body {
   color: #727272;
 }
 
-.actionInput__inputContainer .form-control:focus{
+.actionInput__inputContainer .form-control:focus {
   box-shadow: none;
   border-color: gray;
 }
 
-.actionInput__inputContainer input::placeholder{
-  color:rgba(151, 151, 151, 0.625273);
+.actionInput__inputContainer input::placeholder {
+  color: rgba(151, 151, 151, 0.625273);
 }
 
-.actionInput__text{
+.actionInput__text {
   margin-bottom: 0.5rem;
 }
 
-
 .actionInput {
-
 }
 
 .actionItems {
-  height: 200px;
-  background-color: peachpuff;
 }
-
 
 #container {
   width: 140px;
@@ -67,52 +62,50 @@ body {
   position: relative;
 }
 
-
-
-.actionInput__suggestions{
+.actionInput__suggestions {
   margin-top: 0.5rem;
 }
 
-.actionInput__suggestions button{
+.actionInput__suggestions button {
   border-width: 3px;
   border-radius: 6px;
   font-weight: 600;
 }
 
-.actionInput__suggestions .btn-outline-dark{
-  color:rgba(151, 151, 151, 0.63);
+.actionInput__suggestions .btn-outline-dark {
+  color: rgba(151, 151, 151, 0.63);
   border-color: rgba(151, 151, 151, 0.63);
 }
 
-.actionInput__suggestions .btn-outline-dark:hover{
+.actionInput__suggestions .btn-outline-dark:hover {
   background-color: rgba(151, 151, 151, 0.63);
   color: white;
 }
 
-.actionInput__suggestions .btn-outline-dark:focus{
+.actionInput__suggestions .btn-outline-dark:focus {
   box-shadow: none;
 }
 
-.actionItem__item{
+.actionItem__item {
   background: #f6f6f6;
   border-radius: 10px;
   padding: 1rem;
   margin-top: 12px;
 }
 
-.actionItem__main{
+.actionItem__main {
   display: flex;
   align-items: center;
 }
 
-.actionItem__text{
+.actionItem__text {
   flex: 1;
   text-align: center;
   word-break: break-word;
 }
 
-.actionItem__checkBox{
-  border:3px solid rgba(151, 151, 151, 0.27);
+.actionItem__checkBox {
+  border: 3px solid rgba(151, 151, 151, 0.27);
   width: 30px;
   height: 30px;
   border-radius: 6px;
@@ -121,19 +114,27 @@ body {
   justify-content: center;
 }
 
-.actionItem__checkBox i{
+.actionItem__checkBox i {
   color: #56e452;
 }
 
-.actionItem__text{
+.actionItem__text {
   color: #727272;
   font-weight: bold;
   font-size: 18px;
 }
 
-.actionItem__delete{
+.actionItem__delete {
   color: rgba(151, 151, 151, 0.27);
   width: 40px;
   text-align: center;
   font-size: 20px;
+  cursor: pointer;
+}
+
+.actionItem__check {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
 }
