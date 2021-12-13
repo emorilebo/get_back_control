@@ -5,10 +5,27 @@ addItemForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let itemText = addItemForm.elements.namedItem("itemText").value;
   if (itemText) {
+    add();
     renderActionItem(itemText);
     addItemForm.elements.namedItem("itemText").value = "";
   }
 });
+
+const add = (text) => {
+  let actionItem = {
+    id: 1,
+    added: new Date(),
+    text: "Testing",
+    completed: null,
+  };
+
+  chrome.storage.sync.set({
+    actionItems: [actionItem],
+  });
+  chrome.storage.sync.get(["actionItems"], (data) => {
+    console.log(data);
+  });
+};
 
 const renderActionItem = (text) => {
   let element = document.createElement("div");

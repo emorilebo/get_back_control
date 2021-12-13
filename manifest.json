@@ -17,5 +17,6 @@
     "48": "/images/icons48.png",
     "128": "/images/icons128.png"
   },
-  "manifest_version": 3
+  "manifest_version": 3,
+  "permissions": ["storage"]
 }
