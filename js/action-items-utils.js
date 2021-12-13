@@ -26,15 +26,18 @@ class ActionItems {
     });
   };
 
-  remove = (id) => {
+  remove = (id, callback) => {
     storage.get(["actionItems"], (data) => {
       let items = data.actionItems;
       let foundItemIndex = items.findIndex((item) => item.id == id);
       if (foundItemIndex >= 0) {
         items.splice(foundItemIndex, 1);
-        chrome.storage.sync.set({
-          actionItems: items,
-        });
+        chrome.storage.sync.set(
+          {
+            actionItems: items,
+          },
+          callback
+        );
       }
     });
   };

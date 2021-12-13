@@ -35,13 +35,16 @@ const createQuickActionListener = () => {
   });
 };
 
+const getCurrentTab = () => {};
+
 addItemForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let itemText = addItemForm.elements.namedItem("itemText").value;
   if (itemText) {
-    actionItemsUtils.add(itemText);
-    renderActionItem(itemText);
-    addItemForm.elements.namedItem("itemText").value = "";
+    actionItemsUtils.add(itemText, (actionItem) => {
+      renderActionItem(actionItem.text, actionItem.id, actionItem.completed);
+      addItemForm.elements.namedItem("itemText").value = "";
+    });
   }
 });
 
@@ -61,8 +64,9 @@ const handleDeleteEventListener = (e) => {
   const id = e.target.parentElement.parentElement.getAttribute("data-id");
   const parent = e.target.parentElement.parentElement;
 
-  actionItemsUtils.remove(id);
-  parent.remove();
+  actionItemsUtils.remove(id, () => {
+    parent.remove();
+  });
 };
 
 const renderActionItem = (text, id, completed) => {
