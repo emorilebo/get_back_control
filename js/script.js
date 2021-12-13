@@ -10,6 +10,9 @@ storage.get(["actionItems"], (data) => {
   createQuickActionListener();
   renderActionItems(actionItems);
   actionItemsUtils.setProgress();
+  chrome.storage.onChanged.addListener(() => {
+    actionItemsUtils.setProgress();
+  });
 });
 
 const renderActionItems = (actionItems) => {
