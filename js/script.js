@@ -10,7 +10,7 @@ storage.get(["actionItems"], (data) => {
 
 const renderActionItems = (actionItems) => {
   actionItems.forEach((item) => {
-    renderActionItem(item.text, item.id);
+    renderActionItem(item.text, item.id, item.completed);
   });
 };
 
@@ -73,7 +73,7 @@ const handleCompletedEventListener = (e) => {
   markUnmarkCompleted(id);
 };
 
-const renderActionItem = (text, id) => {
+const renderActionItem = (text, id, completed) => {
   let element = document.createElement("div");
   element.classList.add("actionItem__item");
   let mainElement = document.createElement("div");
@@ -90,6 +90,9 @@ const renderActionItem = (text, id) => {
     <i class="fas fa-check" aria-hidden="true"></i>
   </div>
   `;
+  if (completed) {
+    element.classList.add("completed");
+  }
 
   element.setAttribute("data-id", id);
   checkEl.addEventListener("click", handleCompletedEventListener);
