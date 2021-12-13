@@ -53,12 +53,12 @@ const add = (text) => {
   });
 };
 
-const markUnmarkCompleted = (id) => {
+const markUnmarkCompleted = (id, completeStatus) => {
   storage.get(["actionItems"], (data) => {
     let items = data.actionItems;
     let foundItemIndex = items.findIndex((item) => item.id == id);
     if (foundItemIndex >= 0) {
-      items[foundItemIndex].completed = true;
+      items[foundItemIndex].completed = completeStatus;
       chrome.storage.sync.set({
         actionItems: items,
       });
@@ -69,8 +69,13 @@ const markUnmarkCompleted = (id) => {
 const handleCompletedEventListener = (e) => {
   const id = e.target.parentElement.parentElement.getAttribute("data-id");
   const parent = e.target.parentElement.parentElement;
-  parent.classList.add("completed");
-  markUnmarkCompleted(id);
+  if (parent.classList.contains("completed")) {
+    markUnmarkCompleted(id, null);
+    parent.classList.remove("completed");
+  } else {
+    markUnmarkCompleted(id, true);
+    parent.classList.add("completed");
+  }
 };
 
 const renderActionItem = (text, id, completed) => {
