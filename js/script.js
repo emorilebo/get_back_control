@@ -2,11 +2,10 @@ let addItemForm = document.querySelector("#addItemForm");
 let itemsList = document.querySelector(".actionItems");
 let storage = chrome.storage.sync;
 
-chrome.storage.sync.clear();
-
 storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   renderActionItems(actionItems);
+  console.log(actionItems);
 });
 
 const renderActionItems = (actionItems) => {
@@ -54,12 +53,24 @@ const add = (text) => {
   });
 };
 
-const markUnmarkCompleted = () => {};
+const markUnmarkCompleted = (id) => {
+  storage.get(["actionItems"], (data) => {
+    let items = data.actionItems;
+    let foundItemIndex = items.findIndex((item) => item.id == id);
+    if (foundItemIndex >= 0) {
+      items[foundItemIndex].completed = true;
+      chrome.storage.sync.set({
+        actionItems: items,
+      });
+    }
+  });
+};
 
 const handleCompletedEventListener = (e) => {
+  const id = e.target.parentElement.parentElement.getAttribute("data-id");
   const parent = e.target.parentElement.parentElement;
   parent.classList.add("completed");
-  console.log(uuidv4());
+  markUnmarkCompleted(id);
 };
 
 const renderActionItem = (text, id) => {
