@@ -2,6 +2,8 @@ let addItemForm = document.querySelector("#addItemForm");
 let itemsList = document.querySelector(".actionItems");
 let storage = chrome.storage.sync;
 
+chrome.storage.sync.clear();
+
 storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   renderActionItems(actionItems);
@@ -9,7 +11,7 @@ storage.get(["actionItems"], (data) => {
 
 const renderActionItems = (actionItems) => {
   actionItems.forEach((item) => {
-    renderActionItem(item.text);
+    renderActionItem(item.text, item.id);
   });
 };
 
@@ -25,7 +27,7 @@ addItemForm.addEventListener("submit", (e) => {
 
 const add = (text) => {
   let actionItem = {
-    id: 1,
+    id: uuidv4(),
     added: new Date().toString(),
     text: text,
     completed: null,
@@ -52,12 +54,15 @@ const add = (text) => {
   });
 };
 
+const markUnmarkCompleted = () => {};
+
 const handleCompletedEventListener = (e) => {
   const parent = e.target.parentElement.parentElement;
   parent.classList.add("completed");
+  console.log(uuidv4());
 };
 
-const renderActionItem = (text) => {
+const renderActionItem = (text, id) => {
   let element = document.createElement("div");
   element.classList.add("actionItem__item");
   let mainElement = document.createElement("div");
@@ -75,6 +80,7 @@ const renderActionItem = (text) => {
   </div>
   `;
 
+  element.setAttribute("data-id", id);
   checkEl.addEventListener("click", handleCompletedEventListener);
   textEl.textContent = text;
   deleteEl.innerHTML = `<i class="fas fa-times" aria-hidden="true"></i>`;
