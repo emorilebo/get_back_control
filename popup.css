@@ -133,6 +133,7 @@ body {
   text-align: center;
   font-size: 20px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .actionItem__check {
@@ -156,6 +157,14 @@ body {
 
 .actionItem__check * {
   pointer-events: none;
+}
+
+.actionItem__delete * {
+  pointer-events: none;
+}
+
+.actionItem__delete:hover {
+  color: #d00000;
 }
 
 .actionItem__item.completed .actionItem__check i {

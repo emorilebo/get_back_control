@@ -21,6 +21,24 @@ class ActionItems {
     });
   };
 
+  remove = (id) => {
+    storage.get(["actionItems"], (data) => {
+      let items = data.actionItems;
+      let foundItemIndex = items.findIndex((item) => item.id == id);
+      if (foundItemIndex >= 0) {
+        items.splice(foundItemIndex, 1);
+        chrome.storage.sync.set(
+          {
+            actionItems: items,
+          },
+          () => {
+            this.setProgress();
+          }
+        );
+      }
+    });
+  };
+
   markUnmarkCompleted = (id, completeStatus) => {
     storage.get(["actionItems"], (data) => {
       let items = data.actionItems;
