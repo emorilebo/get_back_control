@@ -5,7 +5,7 @@ let storage = chrome.storage.sync;
 storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   renderActionItems(actionItems);
-  console.log(actionItems);
+  setProgress();
 });
 
 const renderActionItems = (actionItems) => {
@@ -59,9 +59,14 @@ const markUnmarkCompleted = (id, completeStatus) => {
     let foundItemIndex = items.findIndex((item) => item.id == id);
     if (foundItemIndex >= 0) {
       items[foundItemIndex].completed = completeStatus;
-      chrome.storage.sync.set({
-        actionItems: items,
-      });
+      chrome.storage.sync.set(
+        {
+          actionItems: items,
+        },
+        () => {
+          setProgress();
+        }
+      );
     }
   });
 };
@@ -73,7 +78,7 @@ const handleCompletedEventListener = (e) => {
     markUnmarkCompleted(id, null);
     parent.classList.remove("completed");
   } else {
-    markUnmarkCompleted(id, true);
+    markUnmarkCompleted(id, new Date().toString());
     parent.classList.add("completed");
   }
 };
@@ -111,6 +116,18 @@ const renderActionItem = (text, id, completed) => {
   itemsList.prepend(element);
 };
 
+const setProgress = () => {
+  storage.get(["actionItems"], (data) => {
+    let actionItems = data.actionItems;
+    let completedItems;
+    let totalItems = actionItems.length;
+    completedItems = actionItems.filter((item) => item.completed).length;
+    let progress = 0;
+    progress = completedItems / totalItems;
+    circle.animate(progress);
+  });
+};
+
 var circle = new ProgressBar.Circle("#container", {
   color: "#010101",
   // This has to be the same size as the maximum width to
@@ -139,5 +156,3 @@ var circle = new ProgressBar.Circle("#container", {
 });
 circle.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
 circle.text.style.fontSize = "2rem";
-
-circle.animate(1.0); // Number from 0.0 to 1.0
