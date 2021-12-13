@@ -52,6 +52,11 @@ const add = (text) => {
   });
 };
 
+const handleCompletedEventListener = (e) => {
+  const parent = e.target.parentElement.parentElement;
+  parent.classList.add("completed");
+};
+
 const renderActionItem = (text) => {
   let element = document.createElement("div");
   element.classList.add("actionItem__item");
@@ -70,6 +75,7 @@ const renderActionItem = (text) => {
   </div>
   `;
 
+  checkEl.addEventListener("click", handleCompletedEventListener);
   textEl.textContent = text;
   deleteEl.innerHTML = `<i class="fas fa-times" aria-hidden="true"></i>`;
 

@@ -118,6 +118,7 @@ body {
 
 .actionItem__checkBox i {
   color: #56e452;
+  opacity: 0;
 }
 
 .actionItem__text {
@@ -141,10 +142,22 @@ body {
   cursor: pointer;
 }
 
+.actionItem__check:hover i {
+  opacity: 1;
+}
+
 .actionItem__item.completed {
   background-color: #b0f1ab;
 }
 
 .actionItem__item.completed .actionItem__checkBox {
   border-color: #56e452;
+}
+
+.actionItem__check * {
+  pointer-events: none;
+}
+
+.actionItem__item.completed .actionItem__check i {
+  opacity: 1;
 }
