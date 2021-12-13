@@ -1,5 +1,5 @@
 class ActionItems {
-  add = (text) => {
+  add = (text, callback) => {
     let actionItem = {
       id: uuidv4(),
       added: new Date().toString(),
@@ -15,9 +15,14 @@ class ActionItems {
         items.push(actionItem);
       }
 
-      chrome.storage.sync.set({
-        actionItems: items,
-      });
+      chrome.storage.sync.set(
+        {
+          actionItems: items,
+        },
+        () => {
+          callback(actionItem);
+        }
+      );
     });
   };
 

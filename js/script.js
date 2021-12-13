@@ -6,6 +6,8 @@ let actionItemsUtils = new ActionItems();
 
 storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
+  console.log(actionItems);
+  createQuickActionListener();
   renderActionItems(actionItems);
   actionItemsUtils.setProgress();
 });
@@ -13,6 +15,20 @@ storage.get(["actionItems"], (data) => {
 const renderActionItems = (actionItems) => {
   actionItems.forEach((item) => {
     renderActionItem(item.text, item.id, item.completed);
+  });
+};
+
+const handleQuickActionListener = (e) => {
+  const text = e.target.getAttribute("data-text");
+  actionItemsUtils.add(text, (actionItem) => {
+    renderActionItem(actionItem.text, actionItem.id, actionItem.completed);
+  });
+};
+
+const createQuickActionListener = () => {
+  let buttons = document.querySelectorAll(".quick-action");
+  buttons.forEach((button) => {
+    button.addEventListener("click", handleQuickActionListener);
   });
 };
 
