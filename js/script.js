@@ -8,6 +8,7 @@ storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   console.log(actionItems);
   createQuickActionListener();
+  getCurrentTab();
   renderActionItems(actionItems);
   actionItemsUtils.setProgress();
   chrome.storage.onChanged.addListener(() => {
@@ -35,7 +36,12 @@ const createQuickActionListener = () => {
   });
 };
 
-const getCurrentTab = () => {};
+const getCurrentTab = () => {
+  console.log("cool");
+  chrome.tabs.query({ active: true }, (tabs) => {
+    console.log(tabs);
+  });
+};
 
 addItemForm.addEventListener("submit", (e) => {
   e.preventDefault();
