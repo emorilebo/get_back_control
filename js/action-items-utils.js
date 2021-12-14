@@ -1,10 +1,24 @@
 class ActionItems {
-  add = (text, callback) => {
+  addQuickActionItem = (id, text, tab, callback) => {
+    let website = null;
+    if (id == "quick-action-2") {
+      website = {
+        url: tab.url,
+        tav_icon: tab.favIconUrl,
+        title: tab.title,
+      };
+    }
+
+    this.add(text, website, callback);
+  };
+
+  add = (text, website = null, callback) => {
     let actionItem = {
       id: uuidv4(),
       added: new Date().toString(),
       text: text,
       completed: null,
+      website: website,
     };
 
     chrome.storage.sync.get(["actionItems"], (data) => {

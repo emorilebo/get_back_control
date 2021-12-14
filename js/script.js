@@ -8,7 +8,6 @@ storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   console.log(actionItems);
   createQuickActionListener();
-  getCurrentTab();
   renderActionItems(actionItems);
   actionItemsUtils.setProgress();
   chrome.storage.onChanged.addListener(() => {
@@ -24,8 +23,11 @@ const renderActionItems = (actionItems) => {
 
 const handleQuickActionListener = (e) => {
   const text = e.target.getAttribute("data-text");
-  actionItemsUtils.add(text, (actionItem) => {
-    renderActionItem(actionItem.text, actionItem.id, actionItem.completed);
+  const id = e.target.getAttribute("data-id");
+  getCurrentTab().then((tab) => {
+    actionItemsUtils.addQuickActionItem(id, text, tab, (actionItem) => {
+      renderActionItem(actionItem.text, actionItem.id, actionItem.completed);
+    });
   });
 };
 
@@ -36,18 +38,22 @@ const createQuickActionListener = () => {
   });
 };
 
-const getCurrentTab = () => {
-  console.log("cool");
-  chrome.tabs.query({ active: true }, (tabs) => {
-    console.log(tabs);
+async function getCurrentTab() {
+  return await new Promise((resolve, reject) => {
+    chrome.tabs.query(
+      { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
+      (tabs) => {
+        resolve(tabs[0]);
+      }
+    );
   });
-};
+}
 
 addItemForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let itemText = addItemForm.elements.namedItem("itemText").value;
   if (itemText) {
-    actionItemsUtils.add(itemText, (actionItem) => {
+    actionItemsUtils.add(itemText, null, (actionItem) => {
       renderActionItem(actionItem.text, actionItem.id, actionItem.completed);
       addItemForm.elements.namedItem("itemText").value = "";
     });
