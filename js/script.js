@@ -4,6 +4,23 @@ let storage = chrome.storage.sync;
 
 let actionItemsUtils = new ActionItems();
 
+var span = document.getElementById("span");
+
+function time() {
+  var d = new Date();
+  var s = d.getSeconds();
+  var m = d.getMinutes();
+  var h = d.getHours();
+  span.textContent =
+    ("0" + h).substr(-2) +
+    ":" +
+    ("0" + m).substr(-2) +
+    ":" +
+    ("0" + s).substr(-2);
+}
+
+setInterval(time, 1000);
+
 storage.get(["actionItems"], (data) => {
   let actionItems = data.actionItems;
   console.log(actionItems);

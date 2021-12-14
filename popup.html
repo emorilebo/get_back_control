@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Document</title>
+    <title>Weapon Against Time</title>
     <link rel="stylesheet" href="packages/bootstrap.min.css" />
     <link rel="stylesheet" href="popup.css" />
   </head>
@@ -9,8 +9,11 @@
     <div class="container-fluid main">
       <div class="row">
         <div class="col greeting">
+          <h5><span id="span"></span></h5>
           <h2 class="greeting__type">Good morning,</h2>
+
           <h2 class="greeting__name">Godfrey</h2>
+
           <img id="greeting__image" src="./images/good-morning.png" alt="" />
         </div>
       </div>
@@ -64,7 +67,34 @@
         </div>
       </div>
       <div class="row">
-        <div class="col actionItems"></div>
+        <div class="col actionItems">
+          <div class="actionItem__item">
+            <div class="actionItem__main">
+              <div class="actionItem__check">
+                <div class="actionItem__checkBox">
+                  <i class="fas fa-check" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="actionItem__text">Meditate</div>
+              <div class="actionItem__delete">
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="actionItem__linkContainer">
+              <a href="#">
+                <div class="actionItem__link">
+                  <div class="actionItem__favIcon">
+                    <img
+                      src="https://www.freeformatter.com/favicon.ico"
+                      alt=""
+                    />
+                  </div>
+                  <div class="actionItem__title">This is the title</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="./packages/jquery-3.5.1.min.js"></script>
