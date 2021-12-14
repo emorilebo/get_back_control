@@ -43,7 +43,7 @@ const createUpdateNameDialogListener = () => {
   let greetingName = document.querySelector(".greeting__name");
   greetingName.addEventListener("click", () => {
     //open the modal
-    $("updateNameModal").modal("show");
+    $("#updateNameModal").modal("show");
   });
 };
 
