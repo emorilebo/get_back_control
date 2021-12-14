@@ -1,7 +1,22 @@
 body {
   width: 450px;
-  min-height: 562px;
   padding: 12px 12px 27px 12px;
+  display: flex;
+  overflow-y: scroll;
+}
+
+.main {
+  min-height: 562px;
+}
+
+.btn {
+  margin-right: 4px;
+}
+
+#progress-bar {
+  width: 140px;
+  height: 140px;
+  position: relative;
 }
 
 .greeting img {
@@ -21,9 +36,12 @@ body {
 }
 
 .greeting__name {
+  margin-bottom: 0;
   color: #6c757d;
   font-size: 1.5rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .progressContainer {
@@ -51,12 +69,6 @@ body {
 
 .actionInput__text {
   margin-bottom: 0.5rem;
-}
-
-.actionInput {
-}
-
-.actionItems {
 }
 
 #container {
@@ -190,7 +202,6 @@ body {
 .actionItem__linkContainer a:hover .actionItem__favIcon {
   border-color: #32c5ff;
 }
-
 .actionItem__link {
   border: 2px solid rgb(151, 151, 151, 0.27);
   border-radius: 8px;
