@@ -140,27 +140,31 @@ const renderActionItem = (text, id, completed, website = null) => {
   mainElement.appendChild(deleteEl);
   element.appendChild(mainElement);
   if (website) {
-    let linkContainer = createLinkContainer();
+    let linkContainer = createLinkContainer(
+      website.url,
+      website.favIcon,
+      website.title
+    );
     element.appendChild(linkContainer);
   }
 
   itemsList.prepend(element);
 };
 
-const createLinkContainer = () => {
+const createLinkContainer = (url, favIcon, title) => {
   let element = document.createElement("div");
   element.classList.add("actionItem__lintContainer");
   element.innerHTML = `
-  <a href="#">
+  <a href="${url}" target="_blank">
   <div class="actionItem__link">
     <div class="actionItem__favIcon">
       <img
-        src="https://www.freeformatter.com/favicon.ico"
+        src="${favIcon}"
         alt=""
       />
     </div>
     <div class="actionItem__title">
-      <span>This is the title</span>
+      <span>${title}</span>
     </div>
   </div>
 </a>
