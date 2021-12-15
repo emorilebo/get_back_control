@@ -44,6 +44,18 @@ body {
   align-items: center;
 }
 
+.greeting__name:hover i {
+  opacity: 1;
+}
+
+.greeting__name i {
+  opacity: 0;
+  transition: all 0.3s;
+  color: #6c757d;
+  font-size: 0.8em;
+  margin-left: 4px;
+}
+
 .progressContainer {
   display: flex;
   justify-content: center;
