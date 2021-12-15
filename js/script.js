@@ -2,23 +2,6 @@ let itemsList = document.querySelector(".actionItems");
 let addItemForm = document.querySelector("#addItemForm");
 let storage = chrome.storage.sync;
 
-//let actionItemsUtils = new ActionItems();
-
-var span = document.getElementById("span");
-
-function time() {
-  var d = new Date();
-  var s = d.getSeconds();
-  var m = d.getMinutes();
-  var h = d.getHours();
-  span.textContent =
-    ("0" + h).substr(-2) +
-    ":" +
-    ("0" + m).substr(-2) +
-    ":" +
-    ("0" + s).substr(-2);
-}
-
 const setUsersName = (savedName) => {
   let name = savedName ? savedName : "Add Name";
   document.querySelector(".name__value").innerText = name;
@@ -243,7 +226,21 @@ const createLinkContainer = (url, favIcon, title) => {
   return element;
 };
 
-g;
+const setGreetingImage = () => {
+  const image = document.getElementById("greeting__image");
+  const date = new Date();
+  const hours = date.getHours();
+  if (hours >= 5 && hours <= 11) {
+    image.src = "./images/good-morning.png";
+  } else if (hours >= 12 && hours <= 16) {
+    image.src = "./images/good-afternoon.png";
+  } else if (hours >= 17 && hours <= 20) {
+    image.src = "./images/good-evening.png";
+  } else {
+    image.src = "./images/good-night.png";
+  }
+};
+
 const setGreeting = () => {
   let greeting = "Good ";
   const date = new Date();
