@@ -78,15 +78,26 @@ class ActionItems {
     });
   };
 
-  setProgress = () => {
-    storage.get(["actionItems"], (data) => {
-      let actionItems = data.actionItems;
-      let completedItems;
-      let totalItems = actionItems.length;
-      completedItems = actionItems.filter((item) => item.completed).length;
+  static setProgress() {
+    let completedItems = 0;
+    ActionItems.getCurrentItems((items) => {
+      let totalItems = items.length;
+      completedItems = items.filter((item) => {
+        return item.completed;
+      }).length;
       let progress = 0;
-      progress = completedItems / totalItems;
-      circle.animate(progress);
+      if (totalItems > 0) {
+        progress = parseFloat(completedItems / totalItems).toFixed(2);
+      }
+      ActionItems.setBrowserBadge(totalItems - completedItems);
+      if (typeof window.circle !== "undefined") circle.animate(progress);
     });
-  };
+  }
+  static setBrowserBadge(todoItems) {
+    let text = `${todoItems}`;
+    if (todoItems > 9) {
+      text = "9+";
+    }
+    chrome.browserAction.setBadgeText({ text: text });
+  }
 }
