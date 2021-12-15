@@ -1,8 +1,8 @@
-let addItemForm = document.querySelector("#addItemForm");
 let itemsList = document.querySelector(".actionItems");
+let addItemForm = document.querySelector("#addItemForm");
 let storage = chrome.storage.sync;
 
-let actionItemsUtils = new ActionItems();
+//let actionItemsUtils = new ActionItems();
 
 var span = document.getElementById("span");
 
@@ -19,28 +19,25 @@ function time() {
     ("0" + s).substr(-2);
 }
 
-setInterval(time, 1000);
-
-storage.get(["actionItems, 'name'"], (data) => {
-  let actionItems = data.actionItems;
-  let name = data.name;
-  setUsersName(name);
-  setGreeting();
-  setGreetingImage();
-  createQuickActionListener();
-  renderActionItems(actionItems);
-  createUpdateNameDialogListener();
-  createQuickActionListener();
-  actionItemsUtils.setProgress();
-  chrome.storage.onChanged.addListener(() => {
-    actionItemsUtils.setProgress();
-  });
-});
-
 const setUsersName = (savedName) => {
   let name = savedName ? savedName : "Add Name";
   document.querySelector(".name__value").innerText = name;
 };
+
+storage.get(["actionItems", "name"], (data) => {
+  let actionItems = data.actionItems;
+  setUsersName(data.name);
+  setGreeting();
+  setGreetingImage();
+  renderActionItems(actionItems);
+  ActionItems.setProgress();
+  createQuickActionListener();
+  createUpdateNameListener();
+  createUpdateNameDialogListener();
+  chrome.storage.onChanged.addListener(() => {
+    ActionItems.setProgress();
+  });
+});
 
 const renderActionItems = (actionItems) => {
   sortedActionItems = sortFilterActionItems(actionItems);
@@ -72,12 +69,76 @@ const sortFilterActionItems = (actionItems) => {
   return sortedItems;
 };
 
+const handleQuickActionListener = (e) => {
+  const text = e.target.getAttribute("data-text");
+  const id = e.target.getAttribute("data-id");
+  getCurrentTab().then((tab) => {
+    ActionItems.addQuickActionItem(id, text, tab, renderActionItem);
+  });
+};
+
+async function getCurrentTab() {
+  return await new Promise((resolve, reject) => {
+    chrome.tabs.query(
+      { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
+      function (tabs) {
+        resolve(tabs[0]);
+      }
+    );
+  });
+}
+
 const createUpdateNameDialogListener = () => {
   let greetingName = document.querySelector(".greeting__name");
   let currentName = document.querySelector(".name__value").innerText;
   greetingName.addEventListener("click", () => {
     document.getElementById("input__name").value = currentName;
     $("#updateNameModal").modal("show");
+  });
+};
+
+const createQuickActionListener = () => {
+  let quickActionButtons = document.querySelectorAll(".quick-action");
+  quickActionButtons.forEach((quickActionButton) => {
+    quickActionButton.addEventListener("click", handleQuickActionListener);
+  });
+};
+
+addItemForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let actionText = addItemForm.itemText.value;
+  if (actionText) {
+    let actionItem = {
+      id: uuidv4(),
+      added: new Date().toString(),
+      completed: null,
+      text: addItemForm.itemText.value,
+      website: null,
+    };
+    ActionItems.add(actionItem, () => {
+      renderActionItem(actionItem, 250);
+    });
+    addItemForm.itemText.value = "";
+  }
+});
+
+const handleCompletedEventListener = (e) => {
+  const id = e.target.parentElement.parentElement.getAttribute("data-id");
+  const parent = e.target.parentElement.parentElement;
+  if (parent.classList.contains("completed")) {
+    ActionItems.markUnmarkCompleted(id, null);
+    parent.classList.remove("completed");
+  } else {
+    ActionItems.markUnmarkCompleted(id, new Date().toString());
+    parent.classList.add("completed");
+  }
+};
+
+const handleDeleteEventListener = (e) => {
+  const id = e.target.parentElement.parentElement.getAttribute("data-id");
+  let jElement = $(`div[data-id="${id}"]`);
+  ActionItems.remove(id, () => {
+    animateUp(jElement);
   });
 };
 
@@ -96,116 +157,41 @@ const handleUpdateName = () => {
   }
 };
 
-const handleQuickActionListener = (e) => {
-  const text = e.target.getAttribute("data-text");
-  const id = e.target.getAttribute("data-id");
-  getCurrentTab().then((tab) => {
-    actionItemsUtils.addQuickActionItem(id, text, tab, (actionItem) => {
-      renderActionItem(
-        actionItem.text,
-        actionItem.id,
-        actionItem.completed,
-        actionItem.website
-      );
-    });
-  });
-};
-
-const createQuickActionListener = () => {
-  let buttons = document.querySelectorAll(".quick-action");
-  buttons.forEach((button) => {
-    button.addEventListener("click", handleQuickActionListener);
-  });
-};
-
-async function getCurrentTab() {
-  return await new Promise((resolve, reject) => {
-    chrome.tabs.query(
-      { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
-      (tabs) => {
-        resolve(tabs[0]);
-      }
-    );
-  });
-}
-
-addItemForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let itemText = addItemForm.elements.namedItem("itemText").value;
-  if (itemText) {
-    actionItemsUtils.add(itemText, null, (actionItem) => {
-      renderActionItem(
-        actionItem.text,
-        actionItem.id,
-        actionItem.completed,
-        actionItem.website
-      );
-      addItemForm.elements.namedItem("itemText").value = "";
-    });
-  }
-});
-
-const handleCompletedEventListener = (e) => {
-  const id = e.target.parentElement.parentElement.getAttribute("data-id");
-  const parent = e.target.parentElement.parentElement;
-  if (parent.classList.contains("completed")) {
-    actionItemsUtils.markUnmarkCompleted(id, null);
-    parent.classList.remove("completed");
-  } else {
-    actionItemsUtils.markUnmarkCompleted(id, new Date().toString());
-    parent.classList.add("completed");
-  }
-};
-
-const handleDeleteEventListener = (e) => {
-  const id = e.target.parentElement.parentElement.getAttribute("data-id");
-  const parent = e.target.parentElement.parentElement;
-
-  actionItemsUtils.remove(id, () => {
-    parent.remove();
-  });
-};
-
-const renderActionItem = (text, id, completed, website = null) => {
+const renderActionItem = (item, animateDuration = 500) => {
   let element = document.createElement("div");
-  element.classList.add("actionItem__item");
   let mainElement = document.createElement("div");
-  mainElement.classList.add("actionItem__main");
-  let checkEl = document.createElement("div");
-  checkEl.classList.add("actionItem__check");
-  let textEl = document.createElement("div");
-  textEl.classList.add("actionItem__text");
   let deleteEl = document.createElement("div");
+  let checkEl = document.createElement("div");
+  let textEl = document.createElement("div");
+  mainElement.classList.add("actionItem__main");
+  element.classList.add("actionItem__item");
   deleteEl.classList.add("actionItem__delete");
-
-  checkEl.innerHTML = `
-  <div class="actionItem__checkBox">
-    <i class="fas fa-check" aria-hidden="true"></i>
-  </div>
-  `;
-  if (completed) {
+  checkEl.classList.add("actionItem__check");
+  textEl.classList.add("actionItem__text");
+  if (item.completed) {
     element.classList.add("completed");
   }
-
-  element.setAttribute("data-id", id);
-  deleteEl.addEventListener("click", handleDeleteEventListener);
   checkEl.addEventListener("click", handleCompletedEventListener);
-  textEl.textContent = text;
-  deleteEl.innerHTML = `<i class="fas fa-times" aria-hidden="true"></i>`;
-
+  element.setAttribute("data-id", item.id);
+  deleteEl.innerHTML = `<i class="fas fa-times"></i>`;
+  checkEl.innerHTML = ` 
+      <div class="actionItem__checkBox">
+        <i class="fas fa-check"></i>
+      </div>`;
+  deleteEl.addEventListener("click", handleDeleteEventListener);
+  textEl.textContent = item.text;
   mainElement.appendChild(checkEl);
   mainElement.appendChild(textEl);
   mainElement.appendChild(deleteEl);
   element.appendChild(mainElement);
-  if (website) {
-    let linkContainer = createLinkContainer(
-      website.url,
-      website.favIcon,
-      website.title
+  if (item.website) {
+    const link = createLinkContainer(
+      item.website.url,
+      item.website["fav_icon"],
+      item.website.title
     );
-    element.appendChild(linkContainer);
+    element.appendChild(link);
   }
-
   itemsList.prepend(element);
   let jElement = $(`div[data-id="${item.id}"]`);
   animateDown(jElement, animateDuration);
@@ -242,25 +228,22 @@ const animateDown = (element, duration) => {
 
 const createLinkContainer = (url, favIcon, title) => {
   let element = document.createElement("div");
-  element.classList.add("actionItem__lintContainer");
-  element.innerHTML = `
-  <a href="${url}" target="_blank">
-  <div class="actionItem__link">
-    <div class="actionItem__favIcon">
-      <img
-        src="${favIcon}"
-        alt=""
-      />
-    </div>
-    <div class="actionItem__title">
-      <span>${title}</span>
-    </div>
-  </div>
-</a>
-  `;
+  element.classList.add("actionItem__linkContainer");
+  element.innerHTML = `              
+    <a href="${url}" target="_blank">
+      <div class="actionItem__link">
+        <div class="actionItem__favIcon">
+          <img src="${favIcon}">
+        </div>
+        <div class="actionItem__title">
+          <span>${title}</span>
+        </div>
+      </div>
+    </a>`;
   return element;
 };
 
+g;
 const setGreeting = () => {
   let greeting = "Good ";
   const date = new Date();
@@ -275,19 +258,4 @@ const setGreeting = () => {
     greeting += "Night,";
   }
   document.querySelector(".greeting__type").innerText = greeting;
-};
-
-const setGreetingImage = () => {
-  const image = document.getElementById("greeting__image");
-  const date = new Date();
-  const hours = date.getHours();
-  if (hours >= 5 && hours <= 11) {
-    image.src = "./images/good-morning.png";
-  } else if (hours >= 12 && hours <= 16) {
-    image.src = "./images/good-afternoon.png";
-  } else if (hours >= 17 && hours <= 20) {
-    image.src = "./images/good-evening.png";
-  } else {
-    image.src = "./images/good-night.png";
-  }
 };
