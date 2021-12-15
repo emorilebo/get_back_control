@@ -21,17 +21,26 @@ function time() {
 
 setInterval(time, 1000);
 
-storage.get(["actionItems"], (data) => {
+storage.get(["actionItems, 'name'"], (data) => {
   let actionItems = data.actionItems;
+  let name = data.name;
+  setUsersName(name);
+  setGreeting();
   console.log(actionItems);
   createQuickActionListener();
   renderActionItems(actionItems);
   createUpdateNameDialogListener();
+  createQuickActionListener();
   actionItemsUtils.setProgress();
   chrome.storage.onChanged.addListener(() => {
     actionItemsUtils.setProgress();
   });
 });
+
+const setUsersName = (savedName) => {
+  let name = savedName ? savedName : "Add Name";
+  document.querySelector(".name__value").innerText = name;
+};
 
 const renderActionItems = (actionItems) => {
   actionItems.forEach((item) => {
@@ -41,10 +50,26 @@ const renderActionItems = (actionItems) => {
 
 const createUpdateNameDialogListener = () => {
   let greetingName = document.querySelector(".greeting__name");
+  let currentName = document.querySelector(".name__value").innerText;
   greetingName.addEventListener("click", () => {
-    //open the modal
+    document.getElementById("input__name").value = currentName;
     $("#updateNameModal").modal("show");
   });
+};
+
+const createUpdateNameListener = () => {
+  const element = document.querySelector("#update-name");
+  element.addEventListener("click", handleUpdateName);
+};
+
+const handleUpdateName = () => {
+  const name = document.getElementById("input__name").value;
+  if (name) {
+    ActionItems.saveName(name, () => {
+      setUsersName(name);
+    });
+    $("#updateNameModal").modal("hide");
+  }
 };
 
 const handleQuickActionListener = (e) => {
@@ -179,4 +204,20 @@ const createLinkContainer = (url, favIcon, title) => {
 </a>
   `;
   return element;
+};
+
+const setGreeting = () => {
+  let greeting = "Good ";
+  const date = new Date();
+  const hours = date.getHours();
+  if (hours >= 5 && hours <= 11) {
+    greeting += "Morning,";
+  } else if (hours >= 12 && hours <= 16) {
+    greeting += "Afternoon,";
+  } else if (hours >= 17 && hours <= 20) {
+    greeting += "Evening,";
+  } else {
+    greeting += "Night,";
+  }
+  document.querySelector(".greeting__type").innerText = greeting;
 };
