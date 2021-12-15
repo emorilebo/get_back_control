@@ -18,7 +18,7 @@ var circle = new ProgressBar.Circle("#container", {
 
     var value = Math.round(circle.value() * 100);
     if (value === 0) {
-      circle.setText("");
+      circle.setText("0");
     } else {
       circle.setText(value);
     }

@@ -43,9 +43,33 @@ const setUsersName = (savedName) => {
 };
 
 const renderActionItems = (actionItems) => {
-  actionItems.forEach((item) => {
-    renderActionItem(item.text, item.id, item.completed, item.website);
+  sortedActionItems = sortFilterActionItems(actionItems);
+  sortedActionItems.forEach((doc) => {
+    renderActionItem(doc);
   });
+  storage.set({
+    actionItems: sortedActionItems,
+  });
+};
+
+const sortFilterActionItems = (actionItems) => {
+  var currentDate = new Date(); // Datetime now
+  currentDate.setHours(0, 0, 0, 0); // Midnight today 00:00:00.000
+  const filteredItems = actionItems.filter((item) => {
+    if (item.completed) {
+      const completedDate = new Date(item.completed);
+      if (completedDate < currentDate) {
+        return false;
+      }
+    }
+    return true;
+  });
+  const sortedItems = filteredItems.sort((a, b) => {
+    const bDate = new Date(b.added);
+    const aDate = new Date(a.added);
+    return aDate - bDate;
+  });
+  return sortedItems;
 };
 
 const createUpdateNameDialogListener = () => {
@@ -183,6 +207,37 @@ const renderActionItem = (text, id, completed, website = null) => {
   }
 
   itemsList.prepend(element);
+  let jElement = $(`div[data-id="${item.id}"]`);
+  animateDown(jElement, animateDuration);
+};
+
+const animateUp = (element) => {
+  let height = element.innerHeight();
+  element.animate(
+    {
+      opacity: "0",
+      marginTop: `-${height}px`,
+    },
+    {
+      duration: 250,
+      done: () => {
+        element.remove();
+      },
+    }
+  );
+};
+
+const animateDown = (element, duration) => {
+  let height = element.innerHeight();
+  element.css({ marginTop: `-${height}px`, opacity: 0 }).animate(
+    {
+      opacity: "1",
+      marginTop: `12px`,
+    },
+    {
+      duration: duration,
+    }
+  );
 };
 
 const createLinkContainer = (url, favIcon, title) => {

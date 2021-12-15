@@ -18,5 +18,8 @@
     "128": "/images/icons128.png"
   },
   "manifest_version": 3,
-  "permissions": ["storage", "tabs"]
+  "permissions": ["storage", "tabs", "contextMenus"],
+  "background": {
+    "service_worker": "js/background.js"
+  }
 }
